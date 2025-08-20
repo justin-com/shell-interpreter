@@ -1,4 +1,4 @@
-import subprocess
+import subprocess, shlex
 
 def run_shell():
     while True:
@@ -65,7 +65,7 @@ def conditional_pipeline(funcs, cond):
         return result
     return pipeline
 
-
+'''
 # Testing the HOFs
 if __name__ == "__main__":
     run_shell()
@@ -91,3 +91,45 @@ if __name__ == "__main__":
     ]
     cond2 = lambda val: val % 2 == 0
     print(conditional_pipeline(funcs, cond2)([1,2,3,4]))
+'''
+
+def parse_command(line):
+    if not line.strip():
+        return ("", [])
+    
+    try:
+        tokens = shlex.split(line)
+    except ValueError as e:
+        print(f"Parse error: {e}")
+        return ("", [])
+    
+    if not tokens:
+        return ("", [])
+    cmd = tokens[0]
+    args = tokens[1:]
+    return cmd, args
+
+def run_interpreter():
+    print("Interpreter mode: ':exit' to finish, ':show' to display buffer")
+    program_lines = []
+
+    while True:
+        line = input("> ")
+        if line is None:
+            continue
+
+        cmd, args = parse_command(line)
+
+        if cmd == ":exit":
+            break
+        if cmd == ":show":
+            print(program_lines)
+            continue
+
+        program_lines.append((cmd, args))
+
+    return program_lines
+
+if __name__ == "__main__":
+    program_lines = run_interpreter()
+    print("Stored program(s):", program_lines)
