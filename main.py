@@ -109,6 +109,34 @@ def parse_command(line):
     args = tokens[1:]
     return cmd, args
 
+def execute_command(cmd, args):
+    if cmd == "echo":
+        if not args:
+            print("echo: missing arg")
+            return
+        print (" ".join(args))
+        return
+    
+    if cmd == "cd":
+        import os
+        try:
+            os.chdir(args[0])
+            print("cd: success")
+        except IndexError:
+            print("cd: missing arg")
+        except FileNotFoundError:
+            print(f"cd: no such directory: {args[0]}")
+        return
+    
+    try:
+        result = subprocess.run([cmd] + args, capture_output=True, text=True)
+        if result.stdout:
+            print(result.stdout, end="")
+        if result.stderr:
+            print(result.stderr, end="")
+    except FileNotFoundError:
+        print(f"Unknown command: {cmd}")
+
 def run_interpreter():
     print("Interpreter mode: ':exit' to finish, ':show' to display buffer")
     program_lines = []
@@ -127,6 +155,7 @@ def run_interpreter():
             continue
 
         program_lines.append((cmd, args))
+        execute_command(cmd, args)
 
     return program_lines
 
