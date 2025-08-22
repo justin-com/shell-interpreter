@@ -1,10 +1,10 @@
 import unittest
-from main import(
-    parse_command, execute_command, run_interpreter
-)
 import io
 from contextlib import redirect_stdout
 import builtins
+from executor import execute_command
+from parser import parse_command
+from interpreter import run_interpreter
 
 
 class TestExecute(unittest.TestCase):

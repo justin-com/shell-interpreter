@@ -1,5 +1,5 @@
 import unittest
-from main import (
+from old_main import (
     custom_map, custom_filter, custom_reduce,
     apply_until_false, map_with_index, conditional_pipeline
 )
